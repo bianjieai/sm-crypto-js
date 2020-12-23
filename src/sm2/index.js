@@ -4,6 +4,8 @@ const {encodeDer, decodeDer} = require('./asn1')
 const SM3Digest = require('./sm3')
 const SM2Cipher = require('./sm2')
 const _ = require('./utils')
+const BN = require('bn.js');
+
 
 const {G, curve, n} = _.generateEcparam()
 const C1C2C3 = 0
@@ -183,11 +185,32 @@ function doSm3Hash(hashHex, publicKey, userId = '1234567812345678') {
 /**
  * 计算公钥
  */
-function getPublicKeyFromPrivateKey(privateKey) {
+function getPublicKeyFromPrivateKey(privateKey, mode) {
   const PA = G.multiply(new BigInteger(privateKey, 16))
   const x = _.leftPad(PA.getX().toBigInteger().toString(16), 64)
   const y = _.leftPad(PA.getY().toBigInteger().toString(16), 64)
-  return '04' + x + y
+
+  let yBn = new BN(y,16);
+  let s = '';
+  switch (mode) {
+    case 'compress':
+      if ((yBn.words[0] & 1) === 0) {
+        s = '02';
+      } else {
+        s = '03';
+      }
+      return s + x;
+    case 'mix':
+      if ((yBn.words[0] & 1) === 0) {
+        s = '06';
+      } else {
+        s = '07';
+      }
+      break;
+    default:
+      s = '04';
+  }
+  return s + x + y;
 }
 
 /**
@@ -210,4 +233,5 @@ module.exports = {
   doSignature,
   doVerifySignature,
   getPoint,
+  getPublicKeyFromPrivateKey
 }

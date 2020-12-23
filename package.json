@@ -25,7 +25,8 @@
   "author": "june_01",
   "license": "MIT",
   "dependencies": {
-    "jsbn": "^1.1.0"
+    "jsbn": "^1.1.0",
+    "bn.js": "^4.11.6"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

@@ -1,7 +1,7 @@
 {
-  "name": "sm-crypto",
-  "version": "0.2.1",
-  "description": "sm-crypto",
+  "name": "sm-crypto-bj",
+  "version": "0.2.2",
+  "description": "sm-crypto-bj",
   "main": "src/index.js",
   "scripts": {
     "prepublish": "npm run build",
